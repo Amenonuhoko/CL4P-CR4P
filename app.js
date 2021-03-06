@@ -1,12 +1,7 @@
 const Discord = require("discord.js"),
   client = new Discord.Client({
     partials: ["MESSAGE", "REACTION"],
-  }),
-  config = {
-    prefix: "?",
-    token:
-      process.env.TOKEN
-  };
+  });
 
 require('dotenv').config();
 
@@ -45,4 +40,4 @@ client.once("disconnect", () => {
   console.log("D1SC0NN3CT1NG");
 });
 
-client.login(config.token);
+client.login(process.env.TOKEN);
