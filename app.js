@@ -5,8 +5,7 @@ const Discord = require("discord.js"),
   config = {
     prefix: "?",
     token:
-      process.env.TOKEN ||
-      "Nzk0NDM1NDI5NTMzMDg5ODQy.X-6xpg.oNbd1xP4LOazJkW5SpSmz0Ot-Ec",
+      process.env.TOKEN
   };
 const WOKCommands = require("wokcommands");
 const DisTube = require("distube");
@@ -14,6 +13,9 @@ client.distube = new DisTube(client, {
   searchSongs: true,
   emitNewSongOnly: true,
 });
+require('dotenv').config();
+
+
 
 // Init
 client.once("ready", () => {
