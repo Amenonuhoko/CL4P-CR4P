@@ -7,20 +7,20 @@ const Discord = require("discord.js"),
     token:
       process.env.TOKEN
   };
+
+require('dotenv').config();
+
 const WOKCommands = require("wokcommands");
 const DisTube = require("distube");
 client.distube = new DisTube(client, {
   searchSongs: true,
   emitNewSongOnly: true,
 });
-require('dotenv').config();
-
-
 
 // Init
 client.once("ready", () => {
   console.log("CL4P-CR4P IS R34DY");
-
+  client.user.setPresence({ game: { name: '?commands', type: 'LISTENING'}})
   const disabledDefaultCommands = [
     // 'help',
     // 'command',
@@ -43,15 +43,6 @@ client.once("reconnecting", () => {
 });
 client.once("disconnect", () => {
   console.log("D1SC0NN3CT1NG");
-});
-
-// COMMANDS
-client.on("message", async (message) => {
-  if (message.author.equals(client.user)) return;
-  if (!message.content.startsWith(config.prefix)) return;
-
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-  const command = args.shift().toLowerCase();
 });
 
 client.login(config.token);
