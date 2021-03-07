@@ -34,16 +34,6 @@ client.on("ready", () => {
 });
 // Commands
 client.on("message", (message) => {
-	if (message.id === "817947883046699058") {
-		console.log("here");
-		client.on("messageReactionAdd", (reaction, user) => {
-			console.log(reaction);
-			if (reaction.emoji.name === "👌") {
-				message.channel.send("ok");
-			}
-		});
-	}
-
 	// Check starts with prefix
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 	// Split arguments
