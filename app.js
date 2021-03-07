@@ -27,10 +27,23 @@ for (const folder of commandFolders) {
 // Init
 client.on("ready", () => {
 	console.log("CL4P-CR4P IS R34DY");
-	client.user.setPresence({ game: { name: "?commands", type: "LISTENING" } });
+	client.user.setPresence({
+		status: "idle",
+		activity: { type: "LISTENING", name: ">commands" },
+	});
 });
 // Commands
 client.on("message", (message) => {
+	if (message.id === "817947883046699058") {
+		console.log("here");
+		client.on("messageReactionAdd", (reaction, user) => {
+			console.log(reaction);
+			if (reaction.emoji.name === "👌") {
+				message.channel.send("ok");
+			}
+		});
+	}
+
 	// Check starts with prefix
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 	// Split arguments
@@ -63,7 +76,6 @@ client.on("message", (message) => {
 	timestamps.set(message.author.id, now);
 	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 	// Execute
-	console.log("run command");
 	try {
 		command.execute(message, args, client, Discord);
 	} catch (error) {

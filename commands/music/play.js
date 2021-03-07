@@ -5,7 +5,6 @@ module.exports = {
 	cooldown: 5,
 	execute(message, args, client, Discord) {
 		// Play
-		console.log("here");
 		client.distube.play(message, args.join(" "));
 		// EVENT LISTEN
 		client.distube.on("playSong", (message, song) => {
