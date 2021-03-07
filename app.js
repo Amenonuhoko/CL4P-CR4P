@@ -1,43 +1,74 @@
-const Discord = require("discord.js"),
-  client = new Discord.Client({
-    partials: ["MESSAGE", "REACTION"],
-  });
+const Discord = require("discord.js");
+const fs = require("fs");
 
-require('dotenv').config();
+const client = new Discord.Client();
+client.commands = new Discord.Collection();
+const cooldowns = new Discord.Collection();
+const commandFolders = fs.readdirSync("./commands");
+const { prefix } = require("./config.json");
 
-const WOKCommands = require("wokcommands");
 const DisTube = require("distube");
 client.distube = new DisTube(client, {
-  searchSongs: true,
-  emitNewSongOnly: true,
+	searchSongs: true,
+	emitNewSongOnly: true,
 });
-
+// ENV
+require("dotenv").config();
+// Search commands folder
+for (const folder of commandFolders) {
+	const commandFiles = fs
+		.readdirSync(`./commands/${folder}`)
+		.filter((file) => file.endsWith(".js"));
+	for (const file of commandFiles) {
+		const command = require(`./commands/${folder}/${file}`);
+		client.commands.set(command.name, command);
+	}
+}
 // Init
 client.once("ready", () => {
-  console.log("CL4P-CR4P IS R34DY");
-  client.user.setPresence({ game: { name: '?commands', type: 'LISTENING'}})
-  const disabledDefaultCommands = [
-    // 'help',
-    // 'command',
-    // 'language',
-    // 'prefix',
-    // 'requiredrole'
-  ];
-  new WOKCommands(client, {
-    commandsDir: "commands",
-    featureDir: "features",
-    showWarns: true, // Show start up warnings
-    disabledDefaultCommands,
-  })
-    .setDefaultPrefix("?")
-    .setColor(0xff0000);
+	console.log("CL4P-CR4P IS R34DY");
+	client.user.setPresence({ game: { name: "?commands", type: "LISTENING" } });
 });
-
-client.once("reconnecting", () => {
-  console.log("R3C0NN3CT1NG");
-});
-client.once("disconnect", () => {
-  console.log("D1SC0NN3CT1NG");
+// Commands
+client.on("message", (message) => {
+	// Check starts with prefix
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	// Split arguments
+	const args = message.content.slice(prefix.length).trim().split(/ +/);
+	const commandName = args.shift().toLowerCase();
+	const command =
+		client.commands.get(commandName) ||
+		client.commands.find(
+			(cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+		);
+	// Check
+	if (!command) return;
+	if (command.args && !args.length) {
+		return message.channel.send("No arguments");
+	}
+	// Cooldowns
+	if (!cooldowns.has(command.name)) {
+		cooldowns.set(command.name, new Discord.Collection());
+	}
+	const now = Date.now();
+	const timestamps = cooldowns.get(command.name);
+	const cooldownAmount = (command.cooldown || 3) * 1000;
+	if (timestamps.has(message.author.id)) {
+		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+		if (now < expirationTime) {
+			const timeLeft = (expirationTime - now) / 1000;
+			return message.reply(`Wait ${timeLeft.toFixed(1)}`);
+		}
+	}
+	timestamps.set(message.author.id, now);
+	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+	// Execute
+	try {
+		command.execute(message, args, client, Discord);
+	} catch (error) {
+		console.error(error);
+		message.reply("Command Error");
+	}
 });
 
 client.login(process.env.TOKEN);
