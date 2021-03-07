@@ -25,7 +25,7 @@ for (const folder of commandFolders) {
 	}
 }
 // Init
-client.once("ready", () => {
+client.on("ready", () => {
 	console.log("CL4P-CR4P IS R34DY");
 	client.user.setPresence({ game: { name: "?commands", type: "LISTENING" } });
 });
@@ -63,6 +63,7 @@ client.on("message", (message) => {
 	timestamps.set(message.author.id, now);
 	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 	// Execute
+	console.log("run command");
 	try {
 		command.execute(message, args, client, Discord);
 	} catch (error) {
