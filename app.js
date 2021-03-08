@@ -4,7 +4,6 @@ const fs = require("fs");
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
-const commandFolders = fs.readdirSync("./commands");
 const { prefix } = require("./config.json");
 // Music Bot
 const DisTube = require("distube");
@@ -15,6 +14,7 @@ client.distube = new DisTube(client, {
 // ENV
 require("dotenv").config();
 // Search commands folder
+const commandFolders = fs.readdirSync("./commands");
 for (const folder of commandFolders) {
 	const commandFiles = fs
 		.readdirSync(`./commands/${folder}`)
@@ -25,6 +25,9 @@ for (const folder of commandFolders) {
 	}
 }
 // Search events folder
+const eventFiles = fs
+	.readdirSync("./events")
+	.filter((file) => file.endsWith(".js"));
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
