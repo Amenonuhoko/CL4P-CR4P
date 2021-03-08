@@ -6,7 +6,7 @@ client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const commandFolders = fs.readdirSync("./commands");
 const { prefix } = require("./config.json");
-
+// Music Bot
 const DisTube = require("distube");
 client.distube = new DisTube(client, {
 	searchSongs: true,
@@ -22,6 +22,15 @@ for (const folder of commandFolders) {
 	for (const file of commandFiles) {
 		const command = require(`./commands/${folder}/${file}`);
 		client.commands.set(command.name, command);
+	}
+}
+// Search events folder
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args, client));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args, client));
 	}
 }
 // Init
