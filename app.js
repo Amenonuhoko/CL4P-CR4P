@@ -8,8 +8,9 @@ const { prefix } = require("./config.json");
 // Music Bot
 const DisTube = require("distube");
 client.distube = new DisTube(client, {
-	searchSongs: true,
 	emitNewSongOnly: true,
+	searchSongs: false,
+	leaveOnFinish: true,
 });
 // ENV
 require("dotenv").config();
