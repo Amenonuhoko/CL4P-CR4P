@@ -2,7 +2,7 @@ module.exports = {
 	name: "ping",
 	description: "Pings",
 	cooldown: 5,
-	execute(message, args, client, Discord) {
+	execute(message, args, Client, Discord) {
 		const embed = new Discord.MessageEmbed()
 			.setColor("#ff0000")
 			.setTitle("PONG")

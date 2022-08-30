@@ -1,8 +1,8 @@
 module.exports = {
 	name: "ready",
 	once: true,
-	async execute(client) {
-		const channel = await client.channels.fetch("819644377571000370");
+	async execute(Client) {
+		const channel = await Client.channels.fetch("819644377571000370");
 
 		channel.messages.fetch().then((messages) => {
 			if (messages.size === 0) {
@@ -13,5 +13,11 @@ module.exports = {
 					});
 			}
 		});
+
+		console.log("CL4P-CR4P IS R34DY");
+		Client.user.setPresence({
+			status: "online",
+		});
+		Client.user.setActivity(">commands", { type: 2 });
 	},
 };

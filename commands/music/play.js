@@ -1,26 +1,30 @@
 module.exports = {
 	name: "play",
 	description: "Play Music",
-	args: true,
+	args: false,
 	cooldown: 5,
-	execute(message, args, client, Discord) {
+	execute(message, args, Client, Discord) {
 		// Play
-		client.distube.play(message, args.join(" "));
+		// Client.distube.play(message, args.join(" "));
 		// EVENT LISTEN
-		client.distube.on("playSong", (message, song) => {
-			const selectedSongs = song.songs[0];
-			const embed = new Discord.MessageEmbed()
-				.setColor("#ff0000")
-				.setTitle(selectedSongs.name)
-				.setURL(selectedSongs.url)
-				.setThumbnail(selectedSongs.thumbnail)
-				.addFields({
-					name: "Duration",
-					value: song.formattedDuration,
-				})
-				.setFooter(message.author.username);
-
-			message.channel.send(embed);
-		});
+		// Client.distube.on("playSong", (message, song) => {
+		// 	const selectedSongs = song.songs[0];
+		// 	const embed = new Discord.MessageEmbed()
+		// 		.setColor("#ff0000")
+		// 		.setTitle(selectedSongs.name)
+		// 		.setURL(selectedSongs.url)
+		// 		.setThumbnail(selectedSongs.thumbnail)
+		// 		.addFields({
+		// 			name: "Duration",
+		// 			value: song.formattedDuration,
+		// 		})
+		// 		.setFooter(message.author.username);
+		// 	message.channel.send(embed);
+		// });
+		console.log("here");
+		console.log(message.member.voice.channel.id);
+		// const connection = audio.joinVoiceChannel({
+		// 	channelId: message.member.voice.channelId,
+		// });
 	},
 };
